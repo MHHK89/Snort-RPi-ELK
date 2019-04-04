@@ -1,0 +1,114 @@
+#Snort with Docker
+ FROM ubuntu:14.04
+
+
+ # install packages
+ RUN apt-get update && \
+ apt-get install -y \
+ wget \
+ build-essential \
+
+ # Snort pre-requisites
+ libpcap-dev \
+ libpcre3-dev \
+ libdumbnet-dev \
+
+ # Snort DAQ (Data AcQuisition library) pre-requisites
+ bison \
+ flex \
+
+ # Optional libraries that improves fuctionality
+ zlib1g-dev \
+ liblzma-dev \
+ openssl \
+ libssl-dev \
+
+ # nghttp libary
+ autoconf \
+ libtool \
+ pkg-config \
+
+ # barnyard2
+ libmysqlclient-dev \
+ mysql-client \
+ autoconf libtool
+
+
+ #Install DAQ
+ ENV DAQ_VERSION 2.0.6
+ RUN wget https://snort.org/downloads/snort/daq-2.0.6.tar.gz \
+ && tar xzvf daq-${DAQ_VERSION}.tar.gz \
+ && cd daq-${DAQ_VERSION} \
+ && ./configure; make; make install
+
+
+ # Install Nghttp2 - needed?
+ ENV NGHTTP2 1.17.0
+ RUN wget
+https://github.com/nghttp2/nghttp2/releases/download/v1.17.0/nghttp2-1.17.0.tar.gz
+\
+ && tar xzvf nghttp2-${NGHTTP2}.tar.gz \
+ && cd nghttp2-${NGHTTP2} \
+ && autoreconf -i --force; automake; autoconf; ./configure --enable-lib-only; make; make install
+
+
+ # Install Snort
+
+ ENV SNORT_VERSION 2.9.9.0
+ RUN wget https://snort.org/downloads/snort/snort-2.9.9.0.tar.gz \
+ && tar xzvf snort-${SNORT_VERSION}.tar.gz \
+ && cd snort-${SNORT_VERSION} \
+ && ./configure --enable-sourcefire; make; make install
+
+
+ # Install barnyard2
+ RUN wget https://github.com/firnsy/barnyard2/archive/master.tar.gz -O
+ barnyard2-Master.tar.gz \
+ && tar zxvf barnyard2-Master.tar.gz \
+ && cd barnyard2-master \
+ && autoreconf -fvi -I ./m4 \
+ && ln -s /usr/include/dumbnet.h /usr/include/dnet.h \
+ && ./configure --with-mysql --with-mysql-libraries=/usr/lib/x86_64-linux-gnu; make; make install
+
+ # Update shared libaries, or error when starting snort
+ RUN ldconfig
+
+
+ # Create symlink
+ #RUN ln -s /usr/local/bin/snort /usr/sbin/snort
+
+
+ # Create Snort directories and files
+ RUN mkdir -p /etc/snort \
+ && mkdir -p /etc/snort/rules \
+ && mkdir -p /etc/snort/rules/iplists \
+ && mkdir -p /etc/snort/preproc_rules \
+ && mkdir -p /usr/local/lib/snort_dynamicrules \
+ && mkdir -p /etc/snort/so_rules \
+
+ # Create log directories
+ && mkdir -p /var/log/snort \
+ && mkdir -p /var/log/snort/archived_logs \
+
+ # Create files that stores rules and ip lists
+ && touch /etc/snort/rules/iplists/black_list.rules /etc/snort/rules/iplists/white_list.rules /etc/snort/sid-msg.map
+
+ # To copy the configuration files and the dynamic preprocessors
+ RUN cp /snort-${SNORT_VERSION}/etc/*.map /etc/snort \
+ && cp snort-${SNORT_VERSION}/etc/*.conf* /etc/snort \
+ && cp /snort-${SNORT_VERSION}/etc/*.dtd /etc/snort \
+ && cp /snort-${SNORT_VERSION}/src/dynamic-preprocessors/build/usr/local/lib/snort_dynamicpreprocessor/* /usr/local/lib/snort_dynamicpreprocessor/
+
+
+
+ ADD /templates/snort.conf /etc/snort/
+ ADD /templates/sid-msg.map /etc/snort/
+ ADD /templates/rules/snort.rules /etc/snort/rules/
+ ADD /templates/rules/iplists/* /etc/snort/rules/iplists/
+
+ # Create Barnyard2 directories and files
+ RUN cd barnyard2-master \
+
+ && cp etc/barnyard2.conf /etc/snort/ \
+ && mkdir /var/log/barnyard2 \
+ && touch /var/log/snort/barnyard2.waldo
