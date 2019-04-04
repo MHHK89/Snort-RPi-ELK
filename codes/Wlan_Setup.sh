@@ -2,7 +2,7 @@
 
 # Script to Setup an access point on wlan0 interface of RPi
 # using hostapd and isc-dhcp-server
-# install required packages
+# installing required packages
 
 sudo apt-get update
 sudo apt-get install hostapd isc-dhcp-server
