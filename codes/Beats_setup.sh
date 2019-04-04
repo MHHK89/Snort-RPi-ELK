@@ -2,7 +2,7 @@
 # Script to install and Setup Beats on RPi
 # Caution: script may no work for some users, specially path not found error  or mage related errors may be encountered
 # In such case rerunning export PATH=$PATH:/usr/local/go/bin may work
-# Install dependencies
+# Installing dependencies
 
 sudo apt-get install python-pip git
 sudo pip install virtualenv
