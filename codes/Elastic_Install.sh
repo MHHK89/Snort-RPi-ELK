@@ -1,19 +1,19 @@
-#! /bin/bash
+#!/bin/bash
 
-##Script to install Elastic Stack on Ubuntu machine.
-
+#Script to install Elastic Stack on Ubuntu machine.
 
 ELK_version="6.x"
-server_address="SERVERIPADDRESS"  # change accordingly
+server_address="128.39.121.123" 
 nginx_port=5601
 beat_port=5044
 elasticsearch_port=9200
-kibana_username="USERNAME"   # change accordingly
+kibana_username="khan"   # change accordingly
 
 
 # Use Ubuntu default package manager in order to install JAVA 8
 # Logstash6.3 encounter error during installation 05-12-2018
 apt-get update
+apt-get upgrade
 apt-get -y install default-jdk 
 apt-get -y install openjdk-8-jre  
 add-apt-repository -y ppa:webupd8team/java
