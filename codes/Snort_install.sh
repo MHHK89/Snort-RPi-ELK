@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script for Installing and Configuring Snort
+# Script for Installing and Configuring Snort on RPi
 # Barnyard2 is optional, Enable the function barnyard_ask if needed
 
 function update_upgrade() {
