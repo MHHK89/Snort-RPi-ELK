@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# Another way of installing Snort using Docker
  SNORT_NEEDED=$1
  declare -i SLEEPTIME=1
  SLEEPFORMAT="m"
