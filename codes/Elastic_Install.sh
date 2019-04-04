@@ -1,6 +1,6 @@
 #! /bin/bash
 
-#Script to install Elastic Stack on Ubuntu machine.
+##Script to install Elastic Stack on Ubuntu machine.
 
 
 ELK_version="6.x"
