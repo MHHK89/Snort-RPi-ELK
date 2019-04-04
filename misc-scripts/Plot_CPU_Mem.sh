@@ -1,7 +1,7 @@
 #! /bin/bash
 # Script to get CPU and Memory every next second on RPi
 #It will also plot the results after provided time using Gnuplot
-# Author HHK 
+ 
 
 sudo rm status.dat
 
