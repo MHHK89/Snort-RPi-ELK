@@ -3,11 +3,11 @@
 #Script to install Elastic Stack on Ubuntu machine.
 
 ELK_version="6.x"
-server_address="128.39.121.123" 
+server_address="SERVERIP" 
 nginx_port=5601
 beat_port=5044
 elasticsearch_port=9200
-kibana_username="khan"   # change accordingly
+kibana_username="USERNAME"   # change accordingly
 
 
 # Use Ubuntu default package manager in order to install JAVA 8
